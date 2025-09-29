@@ -12,7 +12,11 @@ export default {
         "2xl": "1400px",
       },
     },
-    extend: {
+      extend: {
+        fontFamily: {
+          'sans': ['Inter', 'sans-serif'],
+          'gaming': ['Orbitron', 'monospace'],
+        },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -22,6 +26,12 @@ export default {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          glow: "hsl(var(--primary-glow))",
+        },
+        gaming: {
+          dark: "hsl(var(--gaming-dark))",
+          darker: "hsl(var(--gaming-darker))",
+          accent: "hsl(var(--gaming-accent))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -84,6 +94,22 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fadeInUp": "fadeInUp 0.8s ease-out forwards",
+        "float": "float 3s ease-in-out infinite",
+        "glow": "glow 2s ease-in-out infinite",
+        "particle": "particle linear infinite",
+        "countUp": "countUp 0.6s ease-out forwards",
+      },
+      backgroundImage: {
+        'gradient-hero': 'var(--gradient-hero)',
+        'gradient-card': 'var(--gradient-card)',
+        'gradient-primary': 'var(--gradient-primary)',
+        'gradient-glow': 'var(--gradient-glow)',
+      },
+      boxShadow: {
+        'glow': 'var(--shadow-glow)',
+        'card': 'var(--shadow-card)',
+        'elegant': 'var(--shadow-elegant)',
       },
     },
   },
