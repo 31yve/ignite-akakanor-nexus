@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { Zap, Shield, Headphones, Globe, Server, Cpu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -10,59 +11,85 @@ interface FeatureCardProps {
 }
 
 function FeatureCard({ icon, title, description, index }: FeatureCardProps) {
-  const [isVisible, setIsVisible] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => setIsVisible(true), index * 150);
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [index]);
+  const isInView = useInView(ref, { once: true, amount: 0.3 });
 
   return (
-    <div 
+    <motion.div 
       ref={ref}
-      className={`group p-8 card-gradient rounded-xl border border-border shadow-card hover:shadow-glow transition-all duration-500 hover:scale-105 hover:border-primary/50 ${
-        isVisible ? 'animate-fadeInUp' : 'opacity-0 translate-y-8'
-      }`}
-      style={{ animationDelay: `${index * 150}ms` }}
+      className="group p-8 card-gradient rounded-xl border border-border shadow-card hover:shadow-glow transition-all duration-500 hover:border-primary/50"
+      initial={{ opacity: 0, y: 50, rotateX: 15 }}
+      animate={isInView ? {
+        opacity: 1,
+        y: 0,
+        rotateX: 0,
+        transition: {
+          duration: 0.6,
+          delay: index * 0.1,
+          ease: "easeOut"
+        }
+      } : {}}
+      whileHover={{
+        scale: 1.05,
+        y: -10,
+        rotateX: 5,
+        transition: { duration: 0.3 }
+      }}
+      whileTap={{ scale: 0.98 }}
     >
-      <div className="mb-6">
-        <div className="p-4 bg-primary/10 rounded-lg w-fit group-hover:bg-primary/20 transition-colors duration-300">
+      <motion.div className="mb-6">
+        <motion.div 
+          className="p-4 bg-primary/10 rounded-lg w-fit group-hover:bg-primary/20 transition-colors duration-300"
+          whileHover={{
+            rotate: [0, -5, 5, 0],
+            scale: 1.1,
+            transition: { duration: 0.4 }
+          }}
+        >
           {icon}
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
       
-      <h3 className="text-2xl font-gaming font-semibold mb-4 text-foreground group-hover:text-primary transition-colors duration-300">
-        {title}
-      </h3>
-      
-      <p className="text-muted-foreground leading-relaxed mb-6">
-        {description}
-      </p>
-      
-      <Button 
-        variant="outline" 
-        className="border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 group-hover:border-primary"
+      <motion.h3 
+        className="text-2xl font-gaming font-semibold mb-4 text-foreground group-hover:text-primary transition-colors duration-300"
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : {}}
+        transition={{ delay: index * 0.1 + 0.3 }}
       >
-        Learn More
-      </Button>
-    </div>
+        {title}
+      </motion.h3>
+      
+      <motion.p 
+        className="text-muted-foreground leading-relaxed mb-6"
+        initial={{ opacity: 0 }}
+        animate={isInView ? { opacity: 1 } : {}}
+        transition={{ delay: index * 0.1 + 0.4 }}
+      >
+        {description}
+      </motion.p>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={isInView ? { opacity: 1, y: 0 } : {}}
+        transition={{ delay: index * 0.1 + 0.5 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <Button 
+          variant="outline" 
+          className="border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-300 group-hover:border-primary"
+        >
+          Learn More
+        </Button>
+      </motion.div>
+    </motion.div>
   );
 }
 
 export function Features() {
+  const ref = useRef<HTMLElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
+
   const features = [
     {
       icon: <Zap className="w-10 h-10 text-primary" />,
@@ -97,18 +124,33 @@ export function Features() {
   ];
 
   return (
-    <section id="hosting" className="py-20 relative">
+    <section id="hosting" ref={ref} className="py-20 relative">
       <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-gaming font-bold mb-6">
+        <motion.div 
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6 }}
+        >
+          <motion.h2 
+            className="text-4xl md:text-5xl font-gaming font-bold mb-6"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             <span className="text-foreground">Why Choose</span>{' '}
             <span className="text-gradient">AKA Gaming?</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+          </motion.h2>
+          <motion.p 
+            className="text-xl text-muted-foreground max-w-3xl mx-auto"
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
             Experience the difference with our cutting-edge gaming infrastructure 
             designed for performance, reliability, and scalability.
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {features.map((feature, index) => (
@@ -122,14 +164,24 @@ export function Features() {
           ))}
         </div>
 
-        <div className="text-center mt-16">
-          <Button 
-            size="lg"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-4 text-lg glow-effect hover:scale-105 transition-all duration-300"
+        <motion.div 
+          className="text-center mt-16"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            Explore All Features
-          </Button>
-        </div>
+            <Button 
+              size="lg"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-4 text-lg glow-effect transition-all duration-300"
+            >
+              Explore All Features
+            </Button>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );
